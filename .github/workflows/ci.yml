@@ -39,7 +39,7 @@ jobs:
       - name: inicio-sesion-dockerhub
         uses: docker/login-action@v4
         with:
-          username: ${{ vars.DOCKER_USERNAME }}
+          username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: push-a-docker
