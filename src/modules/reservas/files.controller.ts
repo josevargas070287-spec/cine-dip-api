@@ -1,4 +1,4 @@
-import {
+/*import {
   ApiTags,
   ApiOperation,
   ApiParam,
@@ -41,6 +41,58 @@ export class FilesController {
   ): void {
     const ruta = this.filesService.obtenerImagenPelicula(nombreArchivo);
 
+    response.sendFile(ruta);
+  }
+}*/
+
+
+import {
+  ApiTags,
+  ApiOperation,
+  ApiParam,
+  ApiOkResponse,
+  ApiNotFoundResponse,
+  ApiTooManyRequestsResponse,
+} from '@nestjs/swagger';
+
+import { Controller, Get, Param, Res } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
+import type { Response } from 'express';
+import { FilesService } from './files.service';
+
+@ApiTags('Archivos')
+@Controller('files')
+export class FilesController {
+  constructor(private readonly filesService: FilesService) { }
+
+  @SkipThrottle()
+  @ApiOperation({
+    summary: 'Obtener imagen de película',
+    description: 'Devuelve el archivo de imagen solicitado.',
+  })
+  @ApiParam({
+    name: 'nombreArchivo',
+    type: String,
+    example: 'pelicula-550e8400-e29b-41d4-a716-446655440000.jpg',
+  })
+  @ApiOkResponse({
+    description: 'Imagen encontrada.',
+    content: {
+      'image/jpeg': { schema: { type: 'string', format: 'binary' } },
+      'image/png': { schema: { type: 'string', format: 'binary' } },
+      'image/webp': { schema: { type: 'string', format: 'binary' } },
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'No se encontró la imagen solicitada.',
+  })
+  @SkipThrottle()
+  @Get('pelicula/:nombreArchivo')
+  mostrarImagenPelicula(
+    @Param('nombreArchivo') nombreArchivo: string,
+    @Res() response: Response,
+  ): void {
+    const ruta = this.filesService.obtenerImagenPelicula(nombreArchivo);
     response.sendFile(ruta);
   }
 }
