@@ -43,5 +43,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: push-a-docker
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/api-cine:${{ github.sha }} |
-          echo "modificacion del token"
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/api-cine:${{ github.sha }} 
